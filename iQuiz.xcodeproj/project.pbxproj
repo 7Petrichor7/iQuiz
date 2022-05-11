@@ -13,6 +13,8 @@
 		7C4A3903282B118D009983E2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C4A3901282B118D009983E2 /* Main.storyboard */; };
 		7C4A3905282B118F009983E2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C4A3904282B118F009983E2 /* Assets.xcassets */; };
 		7C4A3908282B118F009983E2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C4A3906282B118F009983E2 /* LaunchScreen.storyboard */; };
+		7C4A3911282B3042009983E2 /* QuizTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4A390F282B3042009983E2 /* QuizTableViewCell.swift */; };
+		7C4A3912282B3042009983E2 /* QuizTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C4A3910282B3042009983E2 /* QuizTableViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		7C4A3904282B118F009983E2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7C4A3907282B118F009983E2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7C4A3909282B118F009983E2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7C4A390F282B3042009983E2 /* QuizTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizTableViewCell.swift; sourceTree = "<group>"; };
+		7C4A3910282B3042009983E2 /* QuizTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = QuizTableViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +64,8 @@
 				7C4A38FD282B118D009983E2 /* SceneDelegate.swift */,
 				7C4A38FF282B118D009983E2 /* ViewController.swift */,
 				7C4A3901282B118D009983E2 /* Main.storyboard */,
+				7C4A390F282B3042009983E2 /* QuizTableViewCell.swift */,
+				7C4A3910282B3042009983E2 /* QuizTableViewCell.xib */,
 				7C4A3904282B118F009983E2 /* Assets.xcassets */,
 				7C4A3906282B118F009983E2 /* LaunchScreen.storyboard */,
 				7C4A3909282B118F009983E2 /* Info.plist */,
@@ -127,6 +133,7 @@
 			files = (
 				7C4A3908282B118F009983E2 /* LaunchScreen.storyboard in Resources */,
 				7C4A3905282B118F009983E2 /* Assets.xcassets in Resources */,
+				7C4A3912282B3042009983E2 /* QuizTableViewCell.xib in Resources */,
 				7C4A3903282B118D009983E2 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -140,6 +147,7 @@
 			files = (
 				7C4A3900282B118D009983E2 /* ViewController.swift in Sources */,
 				7C4A38FC282B118D009983E2 /* AppDelegate.swift in Sources */,
+				7C4A3911282B3042009983E2 /* QuizTableViewCell.swift in Sources */,
 				7C4A38FE282B118D009983E2 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
