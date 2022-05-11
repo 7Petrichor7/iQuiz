@@ -26,26 +26,6 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="MIc-kP-2Wz" id="Isi-9V-IyQ">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Adc-PC-ees">
-                                                    <rect key="frame" x="20" y="22" width="57" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wth-7O-rsg">
-                                                    <rect key="frame" x="20" y="0.0" width="33" height="21"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="Wth-7O-rsg" firstAttribute="leading" secondItem="Isi-9V-IyQ" secondAttribute="leadingMargin" id="4TP-JP-jkG"/>
-                                                <constraint firstItem="Wth-7O-rsg" firstAttribute="top" secondItem="Isi-9V-IyQ" secondAttribute="topMargin" constant="-11" id="8zc-w9-Lhe"/>
-                                                <constraint firstItem="Wth-7O-rsg" firstAttribute="leading" secondItem="Adc-PC-ees" secondAttribute="leading" id="P9J-Gy-5bV"/>
-                                                <constraint firstItem="Adc-PC-ees" firstAttribute="top" secondItem="Wth-7O-rsg" secondAttribute="bottom" constant="1" id="cxa-qz-9on"/>
-                                            </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </prototypes>

@@ -9,6 +9,7 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
+    
     let subjects : [String] = ["Mathematics", "Marvel Super Heroes", "Science"]
     let descriptions : [String] = ["Math knowledge test! 1+1 = ?", "Marval super heroes knowledge multiple choice test!", "Scientific field knowledge!"]
     let images : [String] = ["math", "marvel", "science"]
@@ -38,7 +39,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell : UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "quizTopic", for: indexPath)
 
-        
         cell.imageView?.image = UIImage(named: images[indexPath.row])
         cell.textLabel?.text = subjects[indexPath.row]
         cell.detailTextLabel?.text = descriptions[indexPath.row]
@@ -52,8 +52,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     func clickAlert(_ title : String, _ message : String) {
         let dialogMessage = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
-        dialogMessage.addAction(ok)
+        dialogMessage.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(dialogMessage, animated: true, completion: nil)
     }
     
