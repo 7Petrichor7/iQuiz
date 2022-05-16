@@ -8,11 +8,10 @@
 import UIKit
 
 class QuestionViewController: UIViewController {
-    
     var quizTitle = ""
     var questionIndexClicked = 0
-    var answerSelected = -1
     var correctNum = 0
+    var answerSelected = -1
 
     @IBOutlet weak var questionLabel: UILabel!
     @IBOutlet weak var answerA: UIButton!

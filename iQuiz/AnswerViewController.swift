@@ -8,10 +8,10 @@
 import UIKit
 
 class AnswerViewController: UIViewController {
-    var subject = ""
-    var question = ""
-    var answer = ""
-    var result = ""
+    var subject : String = ""
+    var question : String = ""
+    var answer : String = ""
+    var result : String = ""
     var currentQuestionNum = -1
     var totalQuestionNum = 0
     var correctAnswer = 0
