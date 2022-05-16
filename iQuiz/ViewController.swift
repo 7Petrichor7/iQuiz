@@ -19,26 +19,26 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         clickAlert("Settings", "Settings go here")
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableViewQuiz.delegate = self
         tableViewQuiz.dataSource = self
         tableViewQuiz.rowHeight = 80
+        let quizTableViewNib = UINib(nibName: "QuizTableViewCell", bundle: nil)
+        tableViewQuiz.register(quizTableViewNib, forCellReuseIdentifier: "QuizTableViewCell")
+        self.navigationItem.hidesBackButton = true
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return subjects.count
     }
     
-    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-            return nil
-    }
+//    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+//            return nil
+//    }
 
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell : UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "quizTopic", for: indexPath)
-
+        let cell : UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "QuizTableViewCell", for: indexPath)
         cell.imageView?.image = UIImage(named: images[indexPath.row])
         cell.textLabel?.text = subjects[indexPath.row]
         cell.detailTextLabel?.text = descriptions[indexPath.row]
@@ -46,8 +46,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let item = subjects[indexPath.row]
-        clickAlert(item, "questions for \"\(item)\" will be here")
+        if let quizVC = storyboard?.instantiateViewController(withIdentifier: "quizVC") as? QuestionViewController {
+            quizVC.quizTitle = subjects[indexPath.row]
+            quizVC.correctNum = 0
+            self.navigationController?.pushViewController(quizVC, animated: true)
+        }
     }
     
     func clickAlert(_ title : String, _ message : String) {
@@ -55,8 +58,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         dialogMessage.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(dialogMessage, animated: true, completion: nil)
     }
-    
-
 
 }
 
