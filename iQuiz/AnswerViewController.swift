@@ -2,71 +2,61 @@
 //  AnswerViewController.swift
 //  iQuiz
 //
-//  Created by 🧊🧊 on 5/15/22.
+//  Created by 🧊🧊 on 5/13/22.
 //
-
 import UIKit
 
 class AnswerViewController: UIViewController {
-    var subject : String = ""
-    var question : String = ""
-    var answer : String = ""
-    var result : String = ""
-    var currentQuestionNum = -1
-    var totalQuestionNum = 0
-    var correctAnswer = 0
-
-    @IBOutlet weak var resultLabel: UILabel!
-    @IBOutlet weak var questionLabel: UILabel!
-    @IBOutlet weak var answerLabel: UILabel!
-    @IBOutlet weak var backBtn: UIButton!
-    @IBOutlet weak var nextBtn: UIButton!
     
-    @IBAction func nextBtnTouchUpInside(_ sender: Any) {
-        if currentQuestionNum == totalQuestionNum - 1 {
-            if let resultVC = storyboard?.instantiateViewController(withIdentifier: "resultVC") as? ResultViewController {
-                resultVC.correctNum = correctAnswer
-                resultVC.totalNum = totalQuestionNum
-                self.navigationController?.pushViewController(resultVC, animated: true)
-            }
+    @IBOutlet weak var question: UILabel!
+    @IBOutlet weak var answer: UILabel!
+    @IBOutlet weak var indicator: UILabel!
+    public var chosenAns: String! = nil
+    public var type: Int! = nil
+    public var questionNum: Int! = nil
+    public var totalNum: Int! = nil
+    public var scoreNum: Int! = nil
+    public var questionContent: String! = nil
+    public var correctAns: String! = nil
+    public var fullData: [Quiz] = []
+    public var url: String! = nil
+    
+    @IBAction func next(_ sender: Any) {
+        if (questionNum == totalNum) {
+            performSegue(withIdentifier: "toFinished", sender: self)
         } else {
-            if let quizVC = storyboard?.instantiateViewController(withIdentifier: "quizVC") as? QuestionViewController {
-                quizVC.questionIndexClicked = currentQuestionNum + 1
-                quizVC.answerSelected = -1
-                quizVC.quizTitle = subject
-                quizVC.correctNum = correctAnswer
-                self.navigationController?.pushViewController(quizVC, animated: true)
-            }
+            performSegue(withIdentifier: "toQues", sender: self)
         }
     }
     
-    @IBAction func backToHomeBtnTouchUpInside(_ sender: Any) {
-        if let mainVC = storyboard?.instantiateViewController(withIdentifier: "mainVC") as? ViewController {
-            self.navigationController?.pushViewController(mainVC, animated: true)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let questionView = segue.destination as? QuestionViewController {
+            questionView.typeNum = self.type
+            NSLog("type num is " + String(type))
+            questionView.questionNum = self.questionNum
+            questionView.scoreNum = self.scoreNum
+            questionView.fullData = self.fullData
+            questionView.url = self.url
+        } else if let finishedView = segue.destination as? FinishViewController {
+            finishedView.scoreNum = self.scoreNum
+            finishedView.totalNum = self.totalNum
+            finishedView.url = self.url
+        } else if let mainView = segue.destination as? ViewController {
+            mainView.defaultUrl = self.url
         }
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.hidesBackButton = true
-        questionLabel.text = question
-        answerLabel.text = answer
-        resultLabel.text = result
-        print(correctAnswer)
-
-        // Do any additional setup after loading the view.
+        if chosenAns == correctAns {
+            indicator.text = "You got it right"
+            scoreNum += 1
+        } else {
+            indicator.text = "You got it wrong"
+        }
+        question.text = questionContent
+        answer.text = "The correct answer is : " + correctAns
+        questionNum += 1
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

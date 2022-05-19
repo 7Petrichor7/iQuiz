@@ -2,62 +2,208 @@
 //  ViewController.swift
 //  iQuiz
 //
-//  Created by 🧊🧊 on 5/10/22.
+//  Created by 🧊🧊 on 5/7/22.
 //
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    
-    
-    let subjects : [String] = ["Mathematics", "Marvel Super Heroes", "Science"]
-    let descriptions : [String] = ["Math knowledge test! 1+1 = ?", "Marval super heroes knowledge multiple choice test!", "Scientific field knowledge!"]
-    let images : [String] = ["math", "marvel", "science"]
-    
-    @IBOutlet weak var tableViewQuiz: UITableView!
-    @IBAction func toolbarItem_settings(_ sender: Any) {
-        clickAlert("Settings", "Settings go here")
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        tableViewQuiz.delegate = self
-        tableViewQuiz.dataSource = self
-        tableViewQuiz.rowHeight = 80
-        let quizTableViewNib = UINib(nibName: "QuizTableViewCell", bundle: nil)
-        tableViewQuiz.register(quizTableViewNib, forCellReuseIdentifier: "QuizTableViewCell")
-        self.navigationItem.hidesBackButton = true
-    }
+struct Question: Codable {
+    let text: String
+    let answer: String
+    let answers: [String]
+}
 
+struct Quiz: Codable {
+    let title: String
+    let desc: String
+    let questions: [Question]
+}
+
+class SampleCell : UITableViewCell {
+    @IBOutlet weak var icon: UIImageView!
+    @IBOutlet weak var title: UILabel!
+    @IBOutlet weak var desc: UILabel!
+}
+
+class SubjectSource : NSObject, UITableViewDataSource {
+    public var fullData:[Quiz] = []
+    public var subjects:[String] = []
+    public var descriptions:[String] = []
+    public var images = ["math", "marvel", "science"]
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return subjects.count
     }
     
-//    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-//            return nil
-//    }
-
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell : UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "QuizTableViewCell", for: indexPath)
-        cell.imageView?.image = UIImage(named: images[indexPath.row])
-        cell.textLabel?.text = subjects[indexPath.row]
-        cell.detailTextLabel?.text = descriptions[indexPath.row]
+        let cell : SampleCell = tableView.dequeueReusableCell(withIdentifier: ViewController.CELL_STYLE, for: indexPath) as! SampleCell
+        
+        cell.desc?.text = descriptions[indexPath.row]
+        cell.icon?.image = UIImage(named: images[indexPath.row])
+        cell.title?.text = subjects[indexPath.row]
         return cell
+        
     }
+    
+}
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let quizVC = storyboard?.instantiateViewController(withIdentifier: "quizVC") as? QuestionViewController {
-            quizVC.quizTitle = subjects[indexPath.row]
-            quizVC.correctNum = 0
-            self.navigationController?.pushViewController(quizVC, animated: true)
+class SubjectSelector: NSObject, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100.0
+    }
+}
+
+class ViewController: UIViewController {
+    static let CELL_STYLE = "quizCell"
+    var data = SubjectSource();
+    let actor = SubjectSelector();
+    var defaultUrl = "http://tednewardsandbox.site44.com/questions.json"
+    var urlInputField = UITextField()
+    @IBOutlet weak var tableView: UITableView!
+    
+    @IBAction func setting(_ sender: UIBarButtonItem) {
+        let controller = UIAlertController(title: "Settings", message: "Enter URL", preferredStyle: .alert)
+        
+        controller.addTextField { (textField: UITextField) in
+            self.urlInputField = textField
+            // read from application settings
+            self.urlInputField.text = UserDefaults.standard.string(forKey: "url_preference")
+        }
+        
+        controller.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil))
+        controller.addAction(UIAlertAction(title: NSLocalizedString("Check Now", comment: "ok"), style: .default, handler: {_ in
+            if((self.urlInputField.text) != nil){
+                // store settings
+                UserDefaults.standard.setValue(self.urlInputField.text, forKey: "url_preference")
+                self.fetch(urlInput: self.urlInputField.text!)
+            }
+        }))
+        present(controller, animated: true, completion: {NSLog("complete setting")})
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+        tableView.dataSource = data
+        tableView.delegate = actor
+        if (self.data.subjects.count == 0) {
+            fetch(urlInput: defaultUrl)
         }
     }
     
-    func clickAlert(_ title : String, _ message : String) {
-        let dialogMessage = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        dialogMessage.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        self.present(dialogMessage, animated: true, completion: nil)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let questionView = segue.destination as! QuestionViewController
+        questionView.typeNum = tableView.indexPathForSelectedRow?.row
+        questionView.fullData = self.data.fullData
+        questionView.url = self.defaultUrl
     }
-
+    
+    func fetch(urlInput: String) {
+        let url = URL(string: urlInput)
+        let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        let fileName = "data.json"
+        var filePath: URL! = nil
+        
+        if directory != nil {
+            filePath = directory?.appendingPathComponent(fileName)
+        } else {
+            DispatchQueue.main.async {
+                self.alert(msg: "Can not find your directory")
+            }
+        }
+        
+        if (url == nil) {
+            DispatchQueue.main.async {
+                self.alert(msg: "Invalid url")
+            }
+            return
+        }
+        
+        if Reachability.isConnectedToNetwork() {
+            let task = URLSession.shared.dataTask(with: url!) {
+                data, response, error in
+                if (data != nil && error == nil) {
+                    do {
+                        // decode the data from url
+                        let decodedData = try JSONDecoder().decode([Quiz].self, from: data!)
+                        self.data.fullData = []
+                        self.data.subjects = []
+                        self.data.descriptions = []
+                        for quiz in decodedData {
+                            self.data.fullData.append(quiz)
+                            self.data.subjects.append(quiz.title)
+                            self.data.descriptions.append(quiz.desc)
+                        }
+                        self.defaultUrl = urlInput
+                        // save to local directory
+                        do {
+                            try data!.write(to: filePath!, options: Data.WritingOptions.atomic)
+                        } catch {
+                            DispatchQueue.main.async {
+                                self.alert(msg: "Can not save your data from url")
+                            }
+                        }
+                    } catch {
+                        DispatchQueue.main.async {
+                            self.alert(msg: "Can not parse the data from your url")
+                        }
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.alert(msg: "Invalid url")
+                    }
+                }
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+            task.resume()
+        } else {
+            DispatchQueue.main.async {
+                self.alert(msg: "Internet Connection Failed!")
+            }
+            DispatchQueue.global(qos: .userInitiated).async {
+                var data: Data? = nil
+                do {
+                    try data = Data(contentsOf: filePath!)
+                } catch {
+                    self.alert(msg: "Failed to read local data")
+                }
+                
+                if data != nil && data!.count > 0 {
+                    do {
+                        let decodedData = try JSONDecoder().decode([Quiz].self, from: data!)
+                        self.data.subjects = []
+                        self.data.descriptions = []
+                        self.data.fullData = []
+                        for quiz in decodedData {
+                            self.data.fullData.append(quiz)
+                            self.data.subjects.append(quiz.title)
+                            self.data.descriptions.append(quiz.desc)
+                        }
+                        DispatchQueue.main.async {
+                            self.tableView.reloadData()
+                        }
+                    } catch {
+                        DispatchQueue.main.async {
+                            self.alert(msg: "Can not parse your local data")
+                        }
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.alert(msg: "Can not find any data source")
+                    }
+                }
+            }
+        }
+    }
+    
+    func alert(msg: String) {
+        let controller = UIAlertController(title: "Error", message: msg, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "ok"), style: .default, handler: {
+            _ in NSLog("ok")
+        }))
+        present(controller, animated: true, completion: {NSLog("ok")})
+    }
 }
 
